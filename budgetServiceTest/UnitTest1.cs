@@ -33,4 +33,21 @@ public class Tests
         var result = _budgetService.Query(start,end);
         result.Should().Be(3100);
     }
+    
+    [Test]
+    public void Budget_get_partial_month()
+    {
+        var start = new DateTime(2022, 10, 1);
+        var end = new DateTime(2022, 10, 5);
+        _budgetRepo.GetAll().Returns(new List<Budget>
+        {
+            new Budget()
+            {
+                YearMonth = "202210",
+                Amount = 3100
+            }
+        });
+        var result = _budgetService.Query(start,end);
+        result.Should().Be(500);
+    }
 }

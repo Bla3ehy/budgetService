@@ -14,7 +14,15 @@ public class BudgetService
     {
         var budgets = _budgetRepo.GetAll();
         var result = decimal.Zero;
-        
+        if (start.Day >= 1 || end.Day <= DateTime.DaysInMonth(end.Year, end.Month))
+        {
+            var monthBudget = budgets.Where(o => start == DateTime.ParseExact(o.YearMonth+"01","yyyyMMdd",CultureInfo.CurrentCulture))
+                .Select(o => Convert.ToDecimal(o.Amount))
+                .First();
+
+            result = monthBudget / DateTime.DaysInMonth(end.Year, end.Month) * (end.Day - start.Day + 1);
+
+        }
         if (start.Day == 1 && end.Day == DateTime.DaysInMonth(end.Year, end.Month))
         {
             
